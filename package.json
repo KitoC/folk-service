@@ -40,7 +40,7 @@
     "passport-local-sequelize": "^0.9.0",
     "pg": "^8.5.1",
     "sequelize": "^6.6.2",
-    "sequelize-cli-typescript": "^3.2.0-c",
+    "sequelize-cli": "^6.2.0",
     "winston": "^3.3.3"
   },
   "devDependencies": {
