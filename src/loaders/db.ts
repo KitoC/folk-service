@@ -27,10 +27,16 @@ export default ({ app, config }: LoaderArgs) => {
     _config
   );
 
-  const modelDir = path.join(process.cwd(), "src", "db", "models");
+  let modelDir: string = "";
+
+  if (__dirname.includes("dist")) {
+    modelDir = path.join(process.cwd(), "dist", "src", "db", "models");
+  } else {
+    modelDir = path.join(process.cwd(), "src", "db", "models");
+  }
 
   fs.readdirSync(modelDir)
-    .filter((file) => !["db.types.ts"].includes(file))
+    .filter((file) => !["db.types.ts", "db.types.js"].includes(file))
     .forEach(addModelToDb);
 
   Object.keys(db).forEach((modelName) => {

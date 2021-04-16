@@ -2,7 +2,7 @@ import db from "./db";
 
 require("dotenv").config();
 
-export default {
+export = {
   port: process.env.PORT,
   appName: "user-service",
   db,
