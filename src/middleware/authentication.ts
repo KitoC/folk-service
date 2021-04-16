@@ -6,6 +6,7 @@ import { RequestHandler } from "express";
 import { UserInstance } from "../db/models/user";
 
 const signJwtForUser: RequestHandler = (req, res, next) => {
+  console.log("process.env.JWT_ALGORITHIM", process.env.JWT_ALGORITHM);
   const jwtConfig = {
     algorithm: process.env.JWT_ALGORITHM,
     expiresIn: process.env.JWT_EXPIRY,
@@ -34,7 +35,7 @@ const register: RequestHandler = async (req, res, next) => {
       bcrypt.genSaltSync(8)
     );
 
-    const newUser = await res.locals.container.db.User.create({
+    const newUser = await res.locals.container.cradle.db.User.create({
       ...req.body,
       password: hashedPassword,
     });
@@ -51,9 +52,11 @@ const login: RequestHandler = async (req, res, next) => {
   const { email, password } = req.body;
 
   try {
-    const user = await res.locals.container.db.User.findOne({
+    const user = await res.locals.container.cradle.db.User.findOne({
       where: { email },
     });
+
+    console.log("password, user.password", password, user.password);
 
     const passwordMatchs = await bcrypt.compare(password, user.password);
 

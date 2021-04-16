@@ -26,6 +26,7 @@ export default (sequelize: Sequelize) => {
     firstName: DataTypes.STRING,
     lastName: DataTypes.STRING,
     email: DataTypes.STRING,
+    password: DataTypes.STRING,
   }) as UserModelStatic & {
     associate: (db: Db) => void;
     createStrategy?: () => void;

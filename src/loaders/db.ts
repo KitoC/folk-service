@@ -40,6 +40,7 @@ export default ({ app, config }: LoaderArgs) => {
     .forEach(addModelToDb);
 
   Object.keys(db).forEach((modelName) => {
+    console.log("modelName", modelName);
     if (getModelByKey(modelName).associate) {
       getModelByKey(modelName).associate(db);
     }

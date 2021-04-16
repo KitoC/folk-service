@@ -3,21 +3,23 @@ import middleware from "../../middleware";
 
 const router = Router();
 
-// router.post(
-//   "/register"
-//   //   middleware.users.validations.registration,
-//   //   middleware.authentication.register,
-//   //   middleware.authentication.signJwtForUser,
-//   //   defaultResponse
-// );
+router.post(
+  "/register",
+  middleware.users.validations.registration,
+  middleware.authentication.register,
+  middleware.authentication.signJwtForUser,
+  middleware.shared.sendResponse
 
-// router.post(
-//   "/login"
-//   //   middleware.users.validations.login,
-//   //   middleware.authentication.login,
-//   //   middleware.authentication.signJwtForUser,
-//   //   defaultResponse
-// );
+  //   defaultResponse
+);
+
+router.post(
+  "/login",
+  middleware.users.validations.login,
+  middleware.authentication.login,
+  middleware.authentication.signJwtForUser,
+  middleware.shared.sendResponse
+);
 
 router.get(
   "/check-token",
