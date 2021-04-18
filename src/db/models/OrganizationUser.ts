@@ -22,19 +22,26 @@ export type OrganizationUserModelStatic = typeof Model &
 
 export default (sequelize: SequelizeExtended) => {
   const OrganizationUser = sequelize.defineExtended("OrganizationUser", {
-    organizationId: { type: DataTypes.UUID, allowNull: false },
-    userId: { type: DataTypes.UUID, allowNull: false },
+    id: {
+      type: DataTypes.UUID,
+      allowNull: false,
+      primaryKey: true,
+    },
+    organizationId: {
+      type: DataTypes.UUID,
+      allowNull: false,
+      references: { model: "Organization", key: "id" },
+    },
+    userId: {
+      type: DataTypes.UUID,
+      allowNull: false,
+      references: { model: "User", key: "id" },
+    },
   }) as OrganizationUserModelStatic & {
     associate: (db: Db) => void;
   };
 
-  // OrganizationUser.associate = function (models) {
-  //   OrganizationUser.hasMany(models.Setting, {
-  //     foreignKey: { allowNull: false, name: "OrganizationUserId" },
-  //     onDelete: "CASCADE",
-  //     hooks: true,
-  //   });
-  // };
+  OrganizationUser.associate = function (models) {};
 
   return OrganizationUser;
 };

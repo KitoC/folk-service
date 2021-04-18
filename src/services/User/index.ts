@@ -36,7 +36,6 @@ const makeUserService = ({
 
     const jwtPayload = { email, firstName, lastName, settings, id };
 
-    console.log({ JWT_ALGORITHM, JWT_EXPIRY, JWT_SECRET });
     return jwt.sign(jwtPayload, JWT_SECRET, jwtConfig);
   };
 
@@ -46,10 +45,8 @@ const makeUserService = ({
     return db.User.findOne({ attributes, ...options });
   };
 
-  const setLocalScope = (res: any, { user, settings }: any) => {
-    res.locals.scope = res.locals.container.createScope();
-
-    res.locals.scope.register({
+  const setCurrentUser = (res: any, { user, settings }: any) => {
+    res.locals.container.register({
       currentUser: awilix.asValue(user),
       userSettings: awilix.asValue(settings),
     });
@@ -68,7 +65,6 @@ const makeUserService = ({
     });
 
     if (!user) {
-      console.log(errors.authentication.AUTH_USER_NOT_FOUND);
       throw errors.authentication.AUTH_USER_NOT_FOUND;
     }
 
@@ -84,8 +80,7 @@ const makeUserService = ({
       throw errors.authentication.AUTH_USER_WRONG_PW;
     }
 
-    setLocalScope(res, { user });
-    // return { user };
+    setCurrentUser(res, { user });
   };
 
   const register = async (req: any, res: any) => {
@@ -116,11 +111,12 @@ const makeUserService = ({
     //       config: '{ foo: "bar" }',
     //     });
 
-    setLocalScope(res, { user });
+    setCurrentUser(res, { user });
   };
 
   return {
     getToken,
+    setCurrentUser,
     findOne,
     login,
     register,

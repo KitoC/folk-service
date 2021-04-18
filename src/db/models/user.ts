@@ -63,7 +63,10 @@ export default (sequelize: SequelizeExtended) => {
       hooks: true,
     });
 
-    User.belongsToMany(Organization, { through: OrganizationUser });
+    User.belongsToMany(Organization, {
+      through: OrganizationUser,
+      foreignKey: "userId",
+    });
   };
 
   return User;

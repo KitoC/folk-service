@@ -1,11 +1,24 @@
-import { OrganizationAttributes, Db } from "../../db/models/db.types";
+import {
+  OrganizationAttributes,
+  UserInstance,
+  Db,
+} from "../../db/models/db.types";
 
-const makeOrganizationService = ({ db }: { db: Db }) => {
-  // Notice how we can use destructuring
-  // to access dependencies
+interface UserServiceArgs {
+  db: Db;
+  currentUser: UserInstance;
+}
+
+const makeOrganizationService = ({ db, currentUser }: UserServiceArgs) => {
   return {
-    create: (params: OrganizationAttributes) => {
-      return db.Organization.create(params);
+    create: async (params: OrganizationAttributes) => {
+      const organization = await db.Organization.create(params);
+      const organizationId = organization.id;
+      const userId = currentUser.id;
+
+      await db.OrganizationUser.create({ organizationId, userId });
+
+      return organization;
     },
   };
 };

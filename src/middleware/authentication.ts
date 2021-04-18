@@ -8,7 +8,7 @@ import utils from "../utils";
 import * as awilix from "awilix";
 
 const signJwtForUser: RequestHandler = (req, res, next) => {
-  const UserService = res.locals.scope.resolve("UserService");
+  const { UserService } = res.locals.container.cradle;
 
   const token = UserService.getToken();
 
@@ -55,6 +55,8 @@ const jwtErrorSwitch = (message: string) => {
 };
 
 const requireJwt: RequestHandler = (req, res, next) => {
+  const { UserService } = res.locals.container.cradle;
+
   passport.authenticate(
     "jwt",
     { session: false },
@@ -72,7 +74,8 @@ const requireJwt: RequestHandler = (req, res, next) => {
       }
 
       if (user) {
-        res.locals.currentUser = user;
+        UserService.setCurrentUser(res, { user });
+
         return next();
       }
     }
