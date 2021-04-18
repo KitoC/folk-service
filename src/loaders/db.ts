@@ -9,6 +9,52 @@ import {
   GetModelByKeyFunction,
   AddModelToDbFunction,
 } from "../@types/db.types";
+import utils from "../utils";
+
+const extendSequelize = (sequelize: any) => ({
+  ...sequelize,
+  defineExtended: (modelName: string, attributes: any, options: any = {}) => {
+    const { encryptedFields = [], ...modelOptions } = options;
+
+    // delete options.encryptedFields;
+
+    // ts-ignore
+    const Model = sequelize.define(modelName, attributes, modelOptions);
+
+    Model.beforeValidate(utils.models.addUUID);
+
+    Model.getDecryptedAttributes = () => {
+      return [
+        ...Object.keys(Model.rawAttributes),
+        ...encryptedFields.map((field: string) => [
+          sequelize.fn(
+            "PGP_SYM_DECRYPT",
+            sequelize.cast(sequelize.col(field), "bytea"),
+            "AES_KEY"
+          ),
+          field,
+        ]),
+      ];
+    };
+
+    Model.encryptValue = (value: any) =>
+      sequelize.fn("PGP_SYM_ENCRYPT", value, "AES_KEY");
+
+    Model.beforeCreate((record: any) => {
+      encryptedFields.forEach((key: string) => {
+        if (record[key]) {
+          const encryptedValue = Model.encryptValue(record[key]);
+
+          record[key] = encryptedValue;
+        }
+      });
+
+      return record;
+    });
+
+    return Model;
+  },
+});
 
 export default ({ app, config }: LoaderArgs) => {
   const env = process.env.NODE_ENV || "development";
@@ -17,14 +63,14 @@ export default ({ app, config }: LoaderArgs) => {
   const getModelByKey: GetModelByKeyFunction = (key) => get(db, key, {});
   const addModelToDb: AddModelToDbFunction = async (file) => {
     const model = require(path.join(modelDir, file)).default(sequelize);
+    const key = startCase(model.name).replace(/ /g, "");
 
-    db = { ...db, [startCase(model.name).replace(" ", "")]: model };
+    db = { ...db, [key]: model };
   };
   const _config = get(config, `db.${env}`, {});
 
-  const sequelize = new Sequelize(
-    process.env[_config.use_env_variable],
-    _config
+  const sequelize = extendSequelize(
+    new Sequelize(process.env[_config.use_env_variable], _config)
   );
 
   let modelDir: string = "";
@@ -40,7 +86,6 @@ export default ({ app, config }: LoaderArgs) => {
     .forEach(addModelToDb);
 
   Object.keys(db).forEach((modelName) => {
-    console.log("modelName", modelName);
     if (getModelByKey(modelName).associate) {
       getModelByKey(modelName).associate(db);
     }

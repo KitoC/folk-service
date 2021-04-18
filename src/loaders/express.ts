@@ -12,7 +12,7 @@ const send200Status: RequestHandler = (req, res) => {
 const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
   res.status(err.status || 500);
 
-  console.log(err);
+  console.log({ err });
   res.json({ errors: { message: err.message } });
 };
 

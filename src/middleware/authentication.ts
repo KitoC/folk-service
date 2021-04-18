@@ -4,24 +4,13 @@ import passport from "passport";
 import errors from "../errors";
 import { RequestHandler } from "express";
 import { UserInstance } from "../db/models/user";
+import utils from "../utils";
+import * as awilix from "awilix";
 
 const signJwtForUser: RequestHandler = (req, res, next) => {
-  console.log("process.env.JWT_ALGORITHIM", process.env.JWT_ALGORITHM);
-  const jwtConfig = {
-    algorithm: process.env.JWT_ALGORITHM,
-    expiresIn: process.env.JWT_EXPIRY,
-  } as any;
+  const UserService = res.locals.scope.resolve("UserService");
 
-  const token = jwt.sign(
-    {
-      email: res.locals.currentUser.email,
-      firstName: res.locals.currentUser.first_name,
-      lastName: res.locals.currentUser.last_name,
-      id: res.locals.currentUser.id,
-    },
-    process.env.JWT_SECRET,
-    jwtConfig
-  );
+  const token = UserService.getToken();
 
   res.locals.response = { token };
 
@@ -30,17 +19,9 @@ const signJwtForUser: RequestHandler = (req, res, next) => {
 
 const register: RequestHandler = async (req, res, next) => {
   try {
-    const hashedPassword = await bcrypt.hash(
-      req.body.password,
-      bcrypt.genSaltSync(8)
-    );
+    const { UserService } = res.locals.container.cradle;
 
-    const newUser = await res.locals.container.cradle.db.User.create({
-      ...req.body,
-      password: hashedPassword,
-    });
-
-    res.locals.currentUser = newUser;
+    await UserService.register(req, res);
 
     next();
   } catch (error) {
@@ -49,26 +30,12 @@ const register: RequestHandler = async (req, res, next) => {
 };
 
 const login: RequestHandler = async (req, res, next) => {
-  const { email, password } = req.body;
-
   try {
-    const user = await res.locals.container.cradle.db.User.findOne({
-      where: { email },
-    });
+    const { UserService } = res.locals.container.cradle;
 
-    console.log("password, user.password", password, user.password);
+    await UserService.login(req, res);
 
-    const passwordMatchs = await bcrypt.compare(password, user.password);
-
-    if (passwordMatchs) {
-      res.locals.currentUser = user;
-
-      next();
-    }
-
-    if (!passwordMatchs) {
-      return next(errors.authentication.AUTH_USER_WRONG_PW);
-    }
+    next();
   } catch (error) {
     next(error);
   }

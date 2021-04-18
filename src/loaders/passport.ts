@@ -1,7 +1,9 @@
 import dotenv from "dotenv";
 import passport from "passport";
+// import LocalStrategy from "passport-local";
 import passportJWT from "passport-jwt";
 import { LoaderArgs } from "../@types/loader.types";
+import { UserInstance } from "../db/models/user";
 
 export default async ({ container }: LoaderArgs) => {
   interface JwtPayload {
@@ -12,15 +14,13 @@ export default async ({ container }: LoaderArgs) => {
 
   dotenv.config();
 
-  const jwtSecret = process.env.JWT_SECRET;
-  const jwtAlgorithm = process.env.ALGORITHIM;
-  const jwtExpiresIn = process.env.JWT_EXPIRY;
+  const { JWT_ALGORITHM, JWT_EXPIRY, JWT_SECRET } = process.env;
 
   const jwtOptions = {
     jwtFromRequest: passportJWT.ExtractJwt.fromAuthHeaderAsBearerToken(),
-    secretOrKey: jwtSecret,
-    algorithms: [jwtAlgorithm],
-    jwtExpiresIn,
+    secretOrKey: JWT_SECRET,
+    algorithms: [JWT_ALGORITHM],
+    jwtExpiresIn: JWT_EXPIRY,
     passReqToCallback: true,
   } as any;
 
@@ -41,10 +41,39 @@ export default async ({ container }: LoaderArgs) => {
     )
   );
 
+  // passport.use(
+  //   new LocalStrategy(
+  //     (
+  //       email: string,
+  //       password: string,
+  //       done: (arg1: any, arg2: any) => void
+  //     ) => {
+  //       db.User.findOne(
+  //         { where: { email } },
+  //         function (err: Error, user: UserInstance) {
+  //           if (err) {
+  //             return done(err);
+  //           }
+
+  //           if (!user) {
+  //             return done(null, false);
+  //           }
+
+  //           if (!user.verifyPassword(password)) {
+  //             return done(null, false);
+  //           }
+
+  //           return done(null, user);
+  //         }
+  //       );
+  //     }
+  //   )
+  // );
+
   // @ts-ignore
-  passport.use(db.User.createStrategy());
-  // @ts-ignore
-  passport.serializeUser(db.User.serializeUser());
-  // @ts-ignore
-  passport.deserializeUser(db.User.deserializeUser());
+  // passport.use(db.User.createStrategy());
+  // // @ts-ignore
+  // passport.serializeUser(db.User.serializeUser());
+  // // @ts-ignore
+  // passport.deserializeUser(db.User.deserializeUser());
 };

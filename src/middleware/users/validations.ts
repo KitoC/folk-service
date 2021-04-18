@@ -7,15 +7,22 @@ const registration = async (
   next: NextFunction
 ) => {
   try {
+    const { appId, organizationId } = req.params;
     const { email, password } = req.body;
 
     if (!email || !password) {
       next(errors.authentication.AUTH_NO_P_OR_U);
     }
-    const { db } = res.locals.container.cradle;
 
-    console.log(db.user);
-    const user = await db.User.findOne({ where: { email } });
+    const { UserService, db } = res.locals.container.cradle;
+
+    const include = [];
+
+    if (appId) {
+      include.push({ model: db.UserAppPassword, where: { appId } });
+    }
+
+    const user = await UserService.findOne({ where: { email }, include });
 
     if (user) {
       next(errors.authentication.AUTH_USER_EXISTS);
@@ -30,14 +37,22 @@ const registration = async (
 
 const login = async (req: Request, res: Response, next: NextFunction) => {
   try {
+    const { appId } = req.params;
     const { email, password } = req.body;
 
     if (!email || !password) {
       next(errors.authentication.AUTH_NO_P_OR_U);
     }
-    const { db } = res.locals.container.cradle;
 
-    const user = await db.User.findOne({ where: { email } });
+    const { UserService, db } = res.locals.container.cradle;
+
+    const include = [];
+
+    if (appId) {
+      include.push({ model: db.UserAppPassword, where: { appId } });
+    }
+
+    const user = await UserService.findOne({ where: { email }, include });
 
     if (!user) {
       next(errors.authentication.AUTH_USER_NOT_FOUND);

@@ -1,27 +1,29 @@
 import { Router } from "express";
-import middleware from "../../middleware";
+import middleware from "../../../middleware";
 
-const router = Router();
+const router = Router({ mergeParams: true });
 
 router.post(
-  "/register",
+  "/:appId/register",
   middleware.users.validations.registration,
   middleware.authentication.register,
   middleware.authentication.signJwtForUser,
   middleware.shared.sendResponse
 );
 
-router.post(
-  "/login",
-  middleware.authentication.login,
-  middleware.authentication.signJwtForUser,
-  middleware.shared.sendResponse
-);
+// router.post(
+//   "/login",
+//   middleware.users.validations.login,
+//   middleware.authentication.login,
+//   middleware.authentication.signJwtForUser,
+//   middleware.shared.sendResponse
+// );
 
 router.get(
-  "/check-token",
+  "/:appId/check-token",
   middleware.authentication.requireJwt,
 
+  // middleware.authentication.requireJwt,
   (req, res, next) => {
     res.locals.response = {
       authenticated: true,

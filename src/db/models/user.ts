@@ -1,47 +1,70 @@
-import { Sequelize, DataTypes, BuildOptions, Model } from "sequelize";
-import { Db } from "./db.types";
+import { DataTypes, BuildOptions, Model } from "sequelize";
+import { Db, SequelizeExtended, UserAppPasswordInstance } from "./db.types";
 import passportLocalSequelize from "passport-local-sequelize";
+import utils from "../../utils";
 
 export interface UserAttributes {
   firstName?: string;
   lastName?: string;
-  email?: string;
+  email: string;
+  password: string;
 }
 
 export interface UserInstance extends Model {
-  id: number;
+  id: string;
   createdAt: Date;
   updatedAt: Date;
 
   firstName: string;
   lastName: string;
   email: string;
+  password: string;
+  UserAppPasswords: UserAppPasswordInstance[];
 }
 
 export type UserModelStatic = typeof Model &
-  (new (values?: object, options?: BuildOptions) => UserInstance);
-
-export default (sequelize: Sequelize) => {
-  var User = sequelize.define("User", {
-    firstName: DataTypes.STRING,
-    lastName: DataTypes.STRING,
-    email: DataTypes.STRING,
-    password: DataTypes.STRING,
-  }) as UserModelStatic & {
+  (new (values?: object, options?: BuildOptions) => UserInstance) & {
     associate: (db: Db) => void;
     createStrategy?: () => void;
     serializeUser?: () => void;
     deserializeUser?: () => void;
+    getDecryptedAttributes: () => string[];
   };
+
+export default (sequelize: SequelizeExtended) => {
+  const User = sequelize.defineExtended(
+    "User",
+    {
+      firstName: { type: DataTypes.STRING },
+      lastName: { type: DataTypes.STRING },
+      email: { type: DataTypes.STRING },
+      password: DataTypes.STRING,
+    },
+    { encryptedFields: ["firstName", "lastName"] }
+  ) as UserModelStatic;
 
   User.associate = function (models) {
-    // associations can be defined here
-  };
+    const {
+      Organization,
+      OrganizationUser,
+      UserAppSetting,
+      UserAppPassword,
+    } = models;
 
-  passportLocalSequelize.attachToUser(User, {
-    usernameField: "email",
-    hash: "password",
-  });
+    User.hasMany(UserAppSetting, {
+      foreignKey: { allowNull: false, name: "userId" },
+      onDelete: "CASCADE",
+      hooks: true,
+    });
+
+    User.hasMany(UserAppPassword, {
+      foreignKey: { allowNull: false, name: "userId" },
+      onDelete: "CASCADE",
+      hooks: true,
+    });
+
+    User.belongsToMany(Organization, { through: OrganizationUser });
+  };
 
   return User;
 };
