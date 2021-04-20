@@ -1,7 +1,7 @@
 import { Router } from "express";
 import middleware from "../../middleware";
 
-const router = Router();
+const router = Router({ mergeParams: true });
 
 router.post(
   "/register",

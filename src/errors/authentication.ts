@@ -15,6 +15,11 @@ const authErrors = {
     status: 401,
     code: "AUTH_NO_P_OR_U",
   },
+  USER_NOT_REGISTERED_FOR_APP: {
+    message: "User not registed for app.",
+    status: 401,
+    code: "USER_NOT_REGISTERED_FOR_APP",
+  },
   AUTH_USER_EXISTS: {
     message: "An account with that email already exists.",
     status: 401,

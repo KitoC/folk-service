@@ -6,6 +6,7 @@ export default () => {
   const routes = Router({ mergeParams: true });
 
   routes.use("/auth", auth);
+  routes.use("/auth/:appId", auth);
   routes.use("/organizations", organizations);
 
   return routes;

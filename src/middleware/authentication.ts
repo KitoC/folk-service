@@ -8,9 +8,9 @@ import utils from "../utils";
 import * as awilix from "awilix";
 
 const signJwtForUser: RequestHandler = (req, res, next) => {
-  const { UserService } = res.locals.container.cradle;
+  const { AuthenticationService } = res.locals.container.cradle;
 
-  const token = UserService.getToken();
+  const { token } = AuthenticationService.getToken(req);
 
   res.locals.response = { token };
 
@@ -19,9 +19,9 @@ const signJwtForUser: RequestHandler = (req, res, next) => {
 
 const register: RequestHandler = async (req, res, next) => {
   try {
-    const { UserService } = res.locals.container.cradle;
+    const { AuthenticationService } = res.locals.container.cradle;
 
-    await UserService.register(req, res);
+    await AuthenticationService.register(req, res);
 
     next();
   } catch (error) {
@@ -31,9 +31,9 @@ const register: RequestHandler = async (req, res, next) => {
 
 const login: RequestHandler = async (req, res, next) => {
   try {
-    const { UserService } = res.locals.container.cradle;
+    const { AuthenticationService } = res.locals.container.cradle;
 
-    await UserService.login(req, res);
+    await AuthenticationService.login(req, res);
 
     next();
   } catch (error) {
@@ -55,7 +55,7 @@ const jwtErrorSwitch = (message: string) => {
 };
 
 const requireJwt: RequestHandler = (req, res, next) => {
-  const { UserService } = res.locals.container.cradle;
+  const { AuthenticationService } = res.locals.container.cradle;
 
   passport.authenticate(
     "jwt",
@@ -70,11 +70,12 @@ const requireJwt: RequestHandler = (req, res, next) => {
 
       if (!user) {
         res.locals.currentUser = null;
-        return next(errors.authentication.AUTH_USER_NOT_FOUND);
+
+        return next(err || errors.authentication.AUTH_USER_NOT_FOUND);
       }
 
       if (user) {
-        UserService.setCurrentUser(res, { user });
+        AuthenticationService.utils.setCurrentUser(res, { user });
 
         return next();
       }

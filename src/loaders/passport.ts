@@ -1,44 +1,30 @@
+import { RequestHandler } from "express";
 import dotenv from "dotenv";
 import passport from "passport";
 // import LocalStrategy from "passport-local";
 import passportJWT from "passport-jwt";
 import { LoaderArgs } from "../@types/loader.types";
 import { UserInstance } from "../db/models/user";
+import errors from "../errors";
+import utils from "../utils";
 
 export default async ({ container }: LoaderArgs) => {
-  interface JwtPayload {
-    id: number;
-  }
-
-  const db = container.cradle.db;
+  const { db, AuthenticationService } = container.cradle;
 
   dotenv.config();
 
-  const { JWT_ALGORITHM, JWT_EXPIRY, JWT_SECRET } = process.env;
+  const { JWT_ALGORITHM, JWT_EXPIRY } = process.env;
 
   const jwtOptions = {
     jwtFromRequest: passportJWT.ExtractJwt.fromAuthHeaderAsBearerToken(),
-    secretOrKey: JWT_SECRET,
     algorithms: [JWT_ALGORITHM],
     jwtExpiresIn: JWT_EXPIRY,
+    secretOrKeyProvider: AuthenticationService.secretProvider,
     passReqToCallback: true,
   } as any;
 
   passport.use(
-    new passportJWT.Strategy(
-      jwtOptions,
-      async (req: any, jwtPayload: JwtPayload, next: any) => {
-        try {
-          const user = await db.User.findOne({ where: { id: jwtPayload.id } });
-
-          if (user) {
-            next(null, user);
-          }
-        } catch (error) {
-          next(error);
-        }
-      }
-    )
+    new passportJWT.Strategy(jwtOptions, AuthenticationService.jwtStrategy)
   );
 
   // passport.use(
