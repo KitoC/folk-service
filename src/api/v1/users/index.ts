@@ -13,4 +13,13 @@ router.get(
   )
 );
 
+router.patch(
+  "/apps/:appId/settings",
+  utils.middleware.tryCatchAll(
+    middleware.authentication.requireJwt,
+    middleware.users.apps.updateSettings,
+    middleware.shared.sendResponse
+  )
+);
+
 export default router;

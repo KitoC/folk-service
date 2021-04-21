@@ -3,6 +3,7 @@ import path from "path";
 import get from "lodash/get";
 import startCase from "lodash/startCase";
 import { Sequelize } from "sequelize";
+import SequelizeMock from "sequelize-mock";
 import { LoaderArgs } from "../@types/loader.types";
 import {
   Db,
@@ -20,6 +21,11 @@ const extendSequelize = (sequelize: any) => ({
 
     // ts-ignore
     const Model = sequelize.define(modelName, attributes, modelOptions);
+
+    if (process.env.NODE_ENV === "test") {
+      Model.beforeValidate = () => {};
+      Model.beforeCreate = () => {};
+    }
 
     Model.beforeValidate(utils.models.addUUID);
 
@@ -70,7 +76,9 @@ export default ({ app, config }: LoaderArgs) => {
   const _config = get(config, `db.${env}`, {});
 
   const sequelize = extendSequelize(
-    new Sequelize(process.env[_config.use_env_variable], _config)
+    env === "test"
+      ? new SequelizeMock(process.env[_config.use_env_variable], _config)
+      : new Sequelize(process.env[_config.use_env_variable], _config)
   );
 
   let modelDir: string = "";

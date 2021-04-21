@@ -1,17 +1,18 @@
 const makeGetUserAppSettings = require("../getUserAppSettings").default;
 const errors = require("../../../errors").default;
+const dbLoader = require("../../../loaders/db").default;
 
-const UserAppSetting = {
-  repository: [{ id: 1, appId: "app-id", userId: 1, settings: {} }],
-  findOne({ where }) {
-    return this.repository.find(
-      ({ userId, appId }) => where.userId === userId && where.appId === appId
-    );
-  },
-};
-const db = {
-  UserAppSetting,
-};
+const db = dbLoader({});
+
+const userAppSetting1 = db.UserAppSetting.build({
+  id: 1,
+  appId: "app-id",
+  userId: 1,
+  settings: {},
+});
+
+db.UserAppSetting.$queueResult(userAppSetting1);
+db.UserAppSetting.$queueResult(userAppSetting1);
 
 describe("services/User/getUserAppSettings", () => {
   describe("when currentUser has access to app", () => {
@@ -20,10 +21,12 @@ describe("services/User/getUserAppSettings", () => {
     const getUserAppSettings = makeGetUserAppSettings(container);
 
     it("returns the app settings record", async () => {
-      const expected = UserAppSetting.repository[0];
+      const expected = await db.UserAppSetting.findOne({
+        where: { ...req.params },
+      });
       const result = await getUserAppSettings(req);
 
-      expect(result).toEqual(expected);
+      expect(result.dataValues).toEqual(expected.dataValues);
     });
   });
 
