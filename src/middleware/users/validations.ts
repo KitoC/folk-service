@@ -6,33 +6,28 @@ const registration = async (
   res: Response,
   next: NextFunction
 ) => {
-  try {
-    const { appId, organizationId } = req.params;
-    const { email, password } = req.body;
+  const { appId, organizationId } = req.params;
+  const { email, password } = req.body;
 
-    if (!email || !password) {
-      next(errors.authentication.AUTH_NO_P_OR_U);
-    }
-
-    const { UserService, db } = res.locals.container.cradle;
-
-    const include = [];
-
-    if (appId) {
-      include.push({ model: db.UserAppPassword, where: { appId } });
-    }
-
-    const user = await UserService.findOne({ where: { email }, include });
-
-    if (user) {
-      next(errors.authentication.AUTH_USER_EXISTS);
-    }
-
-    next();
-  } catch (error) {
-    console.log(error);
-    next(error);
+  if (!email || !password) {
+    throw errors.authentication.AUTH_NO_P_OR_U;
   }
+
+  const { UserService, db } = res.locals.container.cradle;
+
+  const include = [];
+
+  if (appId) {
+    include.push({ model: db.UserAppPassword, where: { appId } });
+  }
+
+  const user = await UserService.findOne({ where: { email }, include });
+
+  if (user) {
+    throw errors.authentication.AUTH_USER_EXISTS;
+  }
+
+  next();
 };
 
 const login = async (req: Request, res: Response, next: NextFunction) => {

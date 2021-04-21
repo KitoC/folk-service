@@ -10,16 +10,18 @@ import setCurrentUser from "./utils/setCurrentUser";
 const makeAuthenticationService = (container: Container) => {
   const { db, currentUser } = container;
 
+  const utils = {
+    getSecret,
+    setCurrentUser,
+  };
+
   return {
-    secretProvider: makeSecretProvider(container),
+    secretProvider: makeSecretProvider(),
     jwtStrategy: makeJwtStrategy(container),
     getToken: makeGetToken(container),
     login: makeLogin(container),
     register: makeRegister(container),
-    utils: {
-      getSecret,
-      setCurrentUser,
-    },
+    utils,
   };
 };
 

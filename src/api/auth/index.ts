@@ -1,35 +1,35 @@
 import { Router } from "express";
 import middleware from "../../middleware";
+import utils from "../../utils";
 
 const router = Router({ mergeParams: true });
 
 router.post(
   "/register",
-  middleware.users.validations.registration,
-  middleware.authentication.register,
-  middleware.authentication.signJwtForUser,
-  middleware.shared.sendResponse
+  utils.middleware.tryCatchAll(
+    middleware.users.validations.registration,
+    middleware.authentication.register,
+    middleware.authentication.signJwtForUser,
+    middleware.shared.sendResponse
+  )
 );
 
 router.post(
   "/login",
-  middleware.authentication.login,
-  middleware.authentication.signJwtForUser,
-  middleware.shared.sendResponse
+  utils.middleware.tryCatchAll(
+    middleware.authentication.login,
+    middleware.authentication.signJwtForUser,
+    middleware.shared.sendResponse
+  )
 );
 
 router.get(
   "/check-token",
-  middleware.authentication.requireJwt,
-
-  (req, res, next) => {
-    res.locals.response = {
-      authenticated: true,
-      users: res.locals.container.cradle.db.User.findAll(),
-    };
-    next();
-  },
-  middleware.shared.sendResponse
+  utils.middleware.tryCatchAll(
+    middleware.authentication.requireJwt,
+    middleware.authentication.checkToken,
+    middleware.shared.sendResponse
+  )
 );
 
 export default router;

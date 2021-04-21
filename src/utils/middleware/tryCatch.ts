@@ -1,18 +1,16 @@
-type TryCatchMethod = (req: any, res: any, next: any) => any[];
-type TryCatchMiddleWareWrapper = (method: TryCatchMethod) => () => void;
+import { RequestHandler } from "express";
 
-const tryCatch: TryCatchMiddleWareWrapper = (method: TryCatchMethod) => async (
-  ...args: any[]
-) => {
-  const [req, res, next] = args;
+export type TryCatch = (method: RequestHandler) => RequestHandler;
+export type TryCatchAll = (middlewares: RequestHandler[]) => RequestHandler[];
 
-  try {
-    const results = await method(req, res, next);
-
-    next(...results);
-  } catch (error) {
-    next(error);
-  }
+const tryCatch: TryCatch = (handler) => {
+  return async (req, res, next) => {
+    try {
+      await handler(req, res, next);
+    } catch (error) {
+      next(error);
+    }
+  };
 };
 
 export default tryCatch;

@@ -18,9 +18,6 @@ router.use("/:organizationId/apps", apps);
 
 router.post(
   "/",
-  //   middleware.users.validations.login,
-  //   middleware.authentication.login,
-  //   middleware.authentication.signJwtForUser,
   middleware.authentication.requireJwt,
   middleware.organizations.create,
   middleware.shared.sendResponse

@@ -16,14 +16,7 @@ router.post(
 router.patch(
   "/:appId",
   middleware.authentication.requireJwt,
-  (req, res, next) => {
-    res.locals.response = {
-      authenticated: true,
-      users: res.locals.container.cradle.db.User.findAll(),
-    };
-    next();
-  },
-  // middleware.organizations.apps.create,
+  middleware.organizations.apps.create,
   middleware.shared.sendResponse
 );
 

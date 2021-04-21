@@ -18,27 +18,19 @@ const signJwtForUser: RequestHandler = (req, res, next) => {
 };
 
 const register: RequestHandler = async (req, res, next) => {
-  try {
-    const { AuthenticationService } = res.locals.container.cradle;
+  const { AuthenticationService } = res.locals.container.cradle;
 
-    await AuthenticationService.register(req, res);
+  await AuthenticationService.register(req, res);
 
-    next();
-  } catch (error) {
-    return next(error);
-  }
+  next();
 };
 
 const login: RequestHandler = async (req, res, next) => {
-  try {
-    const { AuthenticationService } = res.locals.container.cradle;
+  const { AuthenticationService } = res.locals.container.cradle;
 
-    await AuthenticationService.login(req, res);
+  await AuthenticationService.login(req, res);
 
-    next();
-  } catch (error) {
-    next(error);
-  }
+  next();
 };
 
 const jwtErrorSwitch = (message: string) => {
@@ -83,12 +75,21 @@ const requireJwt: RequestHandler = (req, res, next) => {
   )(req, res, next);
 };
 
+const checkToken: RequestHandler = (req, res, next) => {
+  res.locals.response = {
+    authenticated: true,
+  };
+
+  next();
+};
+
 const authenticationMiddlewares = {
   register,
   initializePassport: passport.initialize(),
   signJwtForUser,
   login,
   requireJwt,
+  checkToken,
 };
 
 export default authenticationMiddlewares;
