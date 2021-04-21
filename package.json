@@ -5,8 +5,7 @@
   "main": "src/server",
   "scripts": {
     "test": "jest --coverage",
-    "start.hot": "ts-node-dev src/server",
-    "start": "ts-node-dev --files src/server",
+    "start": "ts-node-dev src/server",
     "sql": "yarn sequelize",
     "build": "rm -rf dist && yarn tsc",
     "db:migrate": "yarn build && yarn sql db:migrate",

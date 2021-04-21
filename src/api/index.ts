@@ -1,13 +1,10 @@
 import { Router } from "express";
-import auth from "./auth";
-import organizations from "./organizations";
+import v1 from "./v1";
 
 export default () => {
   const routes = Router({ mergeParams: true });
 
-  routes.use("/auth", auth);
-  routes.use("/auth/:appId", auth);
-  routes.use("/organizations", organizations);
+  routes.use("/v1", v1);
 
   return routes;
 };

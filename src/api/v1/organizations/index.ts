@@ -1,5 +1,5 @@
 import { Router } from "express";
-import middleware from "../../middleware";
+import middleware from "../../../middleware";
 import apps from "./apps";
 
 const router = Router({ mergeParams: true });

@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import getSecret from "./utils/getSecret";
 
+import { JwtPayload } from "./authentication.types";
 import { Container } from "../service.types";
 
 const makeGetToken = (args: Container) => {
