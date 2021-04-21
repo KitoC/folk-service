@@ -3,7 +3,7 @@ import getSecret from "./utils/getSecret";
 
 import { Container } from "../service.types";
 
-const makeSecretProvider = (container: Container) => {
+const makeSecretProvider = () => {
   return (req: any, rawJwtToken: any, done: any) => {
     try {
       const { appId } = req.params;
