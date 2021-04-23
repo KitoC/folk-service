@@ -14,19 +14,38 @@ describe("services/Authentication/getSecret", () => {
 
   const getSecret = require("../../utils/getSecret").default;
 
-  describe("when provided appId", () => {
-    const result = getSecret("app-id");
-
-    it("appends the appId to secret", () => {
-      expect(result).toEqual("secretapp-id");
-    });
+  const makeReq = (endpoint = "/") => ({
+    params: { appId },
+    ...rest,
   });
 
-  describe("when not provided appId", () => {
-    const result = getSecret();
+  [
+    {
+      describeText: "when visiting a route with /v1/auth/:appId",
+      expected: "secret-app-id",
+      endpoint: `/v1/auth/app-id`,
+    },
+    {
+      describeText: "when visiting a route with /v1/my-account",
+      expected: "secret-app-id",
+      endpoint: `/v1/my-account`,
+    },
+    {
+      describeText:
+        "when visiting a route with /v1/organizations/foo/apps/:appId",
+      expected: "secret",
+      endpoint: `/v1/organizations/foo/apps/app-id`,
+    },
+  ].forEach((testCase) => {
+    const { describeText, expected, endpoint } = testCase;
 
-    it("returns only secret", () => {
-      expect(result).toEqual("secret");
+    describe(describeText, () => {
+      const req = { baseUrl: endpoint, params: { appId: "app-id" } };
+      const result = getSecret(req);
+
+      it(`returns ${expected}`, () => {
+        expect(result).toEqual(expected);
+      });
     });
   });
 });

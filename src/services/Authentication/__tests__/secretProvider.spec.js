@@ -26,7 +26,7 @@ describe("services/Authentication/secretProvider", () => {
     it("calls done with null, secret as parameters", () => {
       expect(done.mock.calls.length).toBe(1);
       expect(done.mock.calls[0][0]).toBe(null);
-      expect(done.mock.calls[0][1]).toBe("secretapp-id");
+      expect(done.mock.calls[0][1]).toBe("secret");
     });
   });
 });

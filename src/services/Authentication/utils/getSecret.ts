@@ -1,5 +1,14 @@
+import isAppJwt from "./isAppJwt";
 const { JWT_SECRET } = process.env;
 
-export default (appId: string) => {
-  return appId ? `${JWT_SECRET}${appId}` : JWT_SECRET;
+export default (req: any) => {
+  const { appId } = req.params;
+
+  let secret = JWT_SECRET;
+
+  if (appId && isAppJwt(req)) {
+    secret += `-${appId}`;
+  }
+
+  return secret;
 };

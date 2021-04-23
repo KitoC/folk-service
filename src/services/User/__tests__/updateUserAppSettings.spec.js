@@ -33,9 +33,6 @@ describe("services/User/updateUserAppSettings", () => {
 
       const result = await updateUserAppSettings(req);
 
-      console.log("result --> ", result.dataValues);
-      console.log("expected --> ", expected.dataValues);
-
       expect(result.dataValues.settings).toEqual(expected.settings);
     });
   });

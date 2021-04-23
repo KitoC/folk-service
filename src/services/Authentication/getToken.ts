@@ -8,7 +8,6 @@ const makeGetToken = (args: Container) => {
   const { currentUser, userSettings } = args;
 
   return (req: any) => {
-    const { appId } = req.params;
     const { JWT_ALGORITHM, JWT_EXPIRY, JWT_SECRET } = process.env;
 
     const jwtConfig: any = { algorithm: JWT_ALGORITHM, expiresIn: JWT_EXPIRY };
@@ -16,7 +15,7 @@ const makeGetToken = (args: Container) => {
     const { email, firstName, lastName, id } = currentUser;
     const settings = userSettings;
 
-    const secret = getSecret(appId);
+    const secret = getSecret(req);
 
     const jwtPayload: JwtPayload = {
       email,
@@ -25,10 +24,6 @@ const makeGetToken = (args: Container) => {
       settings,
       id,
     };
-
-    if (appId) {
-      jwtPayload.appId = appId;
-    }
 
     const token = jwt.sign(jwtPayload, secret, jwtConfig);
 

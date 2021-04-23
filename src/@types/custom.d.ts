@@ -7,9 +7,3 @@ declare global {
     }
   }
 }
-
-// declare namespace Express {
-//   export interface Request {
-//     _container: string;
-//   }
-// }
