@@ -43,6 +43,7 @@
     "sequelize": "^6.6.2",
     "sequelize-cli": "^6.2.0",
     "sequelize-encrypted": "^1.0.0",
+    "sequelize-log-syntax-colors": "^2.0.0",
     "sequelize-mock": "^0.10.2",
     "uuid": "^8.3.2",
     "winston": "^3.3.3"

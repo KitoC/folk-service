@@ -5867,6 +5867,11 @@ sequelize-encrypted@^1.0.0:
   resolved "https://registry.yarnpkg.com/sequelize-encrypted/-/sequelize-encrypted-1.0.0.tgz#49c5f48edcebd3504cc18bcb4876600d53e311d7"
   integrity sha1-ScX0jtzr01BMwYvLSHZgDVPjEdc=
 
+sequelize-log-syntax-colors@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/sequelize-log-syntax-colors/-/sequelize-log-syntax-colors-2.0.0.tgz#cd81bde18c67bf6663c8bf89b178648f6344aaae"
+  integrity sha512-WwrB7T4hhB8404fP21kchirbt92R1Wyl0AeQdoGvTXAYKp6YTM8ul9IEK1hBj+yzP7gDnMA6GYO9et+QW1CWEg==
+
 sequelize-mock@^0.10.2:
   version "0.10.2"
   resolved "https://registry.yarnpkg.com/sequelize-mock/-/sequelize-mock-0.10.2.tgz#19d3971ccdaeb5b864170c24ce792a8a71f144bd"
