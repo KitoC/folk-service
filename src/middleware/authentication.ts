@@ -41,6 +41,9 @@ const jwtErrorSwitch = (message: string) => {
     case "invalid token":
       return errors.authentication.AUTH_INVALID_TOKEN;
 
+    case "invalid signature":
+      return errors.authentication.AUTH_INVALID_TOKEN;
+
     default:
       return { message, status: 401, code: "N/A" };
   }

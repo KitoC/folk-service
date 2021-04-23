@@ -4,16 +4,10 @@ import cors from "cors";
 import routes from "../api";
 import get from "lodash/get";
 import { LoaderArgs } from "../@types/loader.types";
+import middleware from "../middleware";
 
 const send200Status: RequestHandler = (req, res) => {
   res.status(200).json({ status: "OK" });
-};
-
-const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
-  res.status(err.status || 500);
-
-  console.log({ err });
-  res.json({ errors: { message: err.message } });
 };
 
 export default ({ app, config }: LoaderArgs) => {
@@ -29,5 +23,5 @@ export default ({ app, config }: LoaderArgs) => {
 
   app.use(get(config, "api.prefix", ""), routes());
 
-  app.use(errorHandler);
+  app.use(middleware.handlers.error);
 };
