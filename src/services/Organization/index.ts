@@ -1,4 +1,5 @@
 import { Container } from "../service.types";
+import makeCreateOne from "./createOne";
 
 const makeOrganizationService = (container: Container) => {
   return {

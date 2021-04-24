@@ -4,7 +4,7 @@ import errors from "../../errors";
 import { OrganizationAttributes } from "../../db/models/db.types";
 
 const makeFindOne = (container: Container) => {
-  const { db } = container;
+  const { db, currentUser } = container;
 
   return async (params: OrganizationAttributes) => {
     const organization = await db.Organization.create(params);
