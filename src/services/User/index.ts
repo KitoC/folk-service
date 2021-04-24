@@ -1,20 +1,11 @@
-import { UserInstance } from "../../db/models/db.types";
-import errors from "../../errors";
 import { Container } from "../service.types";
 import makeGetUserAppSettings from "./getUserAppSettings";
 import makeUpdateUserAppSettings from "./updateUserAppSettings";
+import makeFindOne from "./findOne";
 
 const makeUserService = (container: Container) => {
-  const { db, currentUser, userSettings } = container;
-
-  const findOne = (options: any = {}) => {
-    const attributes = db.User.getDecryptedAttributes();
-
-    return db.User.findOne({ attributes, ...options });
-  };
-
   return {
-    findOne,
+    findOne: makeFindOne(container),
     getUserAppSettings: makeGetUserAppSettings(container),
     updateUserAppSettings: makeUpdateUserAppSettings(container),
   };

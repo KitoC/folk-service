@@ -1,4 +1,4 @@
-import { UserInstance, Db } from "../../db/models/db.types";
+import { UserInstance, Db } from "../db/models/db.types";
 
 export interface UserService {
   findOne: (where: any) => UserInstance;

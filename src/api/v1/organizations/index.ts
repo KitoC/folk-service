@@ -8,9 +8,11 @@ router.use("/:organizationId/apps", apps);
 
 router.post(
   "/",
-  middleware.authentication.requireJwt,
-  middleware.organizations.create,
-  middleware.shared.sendResponse
+  utils.middleware.tryCatchAll(
+    middleware.authentication.requireJwt,
+    middleware.organizations.createOne,
+    middleware.shared.sendResponse
+  )
 );
 
 export default router;

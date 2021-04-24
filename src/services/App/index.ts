@@ -1,10 +1,15 @@
-import { AppAttributes, Db } from "../../db/models/db.types";
+import { Container } from "../service.types";
+import makeCreateOne from "./createOne";
+import makeUpdateOne from "./updateOne";
+import makeGetOne from "./getOne";
+import makeGetAll from "./getAll";
 
-const makeAppService = ({ db }: { db: Db }) => {
+const makeAppService = (container: Container) => {
   return {
-    create: (params: AppAttributes) => {
-      return db.App.create(params);
-    },
+    createOne: makeCreateOne(container),
+    updateOne: makeUpdateOne(container),
+    getOne: makeGetOne(container),
+    getAll: makeGetAll(container),
   };
 };
 
