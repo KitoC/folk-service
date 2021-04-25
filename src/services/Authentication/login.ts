@@ -13,7 +13,7 @@ const makeLogin = (args: Container) => {
     const { email, password } = req.body;
 
     if (!email || !password) {
-      throw new Error(errors.authentication.AUTH_NO_P_OR_U);
+      throw errors.authentication.AUTH_NO_P_OR_U;
     }
 
     const user = await UserService.findOne({ where: { email } });
@@ -22,7 +22,7 @@ const makeLogin = (args: Container) => {
       throw errors.authentication.AUTH_USER_NOT_FOUND;
     }
 
-    let providedPassword = user.password;
+    let storedPassword = user.password;
 
     if (appId) {
       const AppPassword = await db.UserAppPassword.findOne({
@@ -33,10 +33,10 @@ const makeLogin = (args: Container) => {
         throw errors.authentication.AUTH_USER_NOT_FOUND;
       }
 
-      providedPassword = get(AppPassword, "password");
+      storedPassword = get(AppPassword, "password");
     }
 
-    const passwordMatchs = await bcrypt.compare(password, providedPassword);
+    const passwordMatchs = await bcrypt.compare(password, storedPassword);
 
     if (!passwordMatchs) {
       throw errors.authentication.AUTH_USER_WRONG_PW;

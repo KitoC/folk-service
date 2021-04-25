@@ -19,11 +19,11 @@ const extendSequelize = (sequelize: any) => ({
     const { encryptedFields = [], ...modelOptions } = options;
 
     // delete options.encryptedFields;
-
+    const env = process.env.NODE_ENV;
     // ts-ignore
     const Model = sequelize.define(modelName, attributes, modelOptions);
 
-    if (process.env.NODE_ENV === "test") {
+    if (env === "test") {
       Model.beforeValidate = () => {};
       Model.beforeCreate = () => {};
     }
@@ -31,8 +31,12 @@ const extendSequelize = (sequelize: any) => ({
     Model.beforeValidate(utils.models.addUUID);
 
     Model.getDecryptedAttributes = () => {
+      if (env === "test") {
+        return null;
+      }
+
       return [
-        ...Object.keys(Model.rawAttributes),
+        ...Object.keys(Model.rawAttributes || Model._defaults),
         ...encryptedFields.map((field: string) => [
           sequelize.fn(
             "PGP_SYM_DECRYPT",
