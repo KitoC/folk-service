@@ -52,14 +52,7 @@ const describeServiceMethod = (serviceMethodPath, tests) => {
   };
 
   describe(`services/Authentication/${serviceMethodName}`, () => {
-    tests(serviceMethod, {
-      ...testArgs,
-      ...setters,
-      _getMethod() {
-        console.log("testArgs.container", Object.keys(testArgs.container));
-        return makeServiceMethod(testArgs.container);
-      },
-    });
+    tests(serviceMethod, { ...testArgs, ...setters });
   });
 };
 
