@@ -5,6 +5,7 @@ const bcrypt = require("bcrypt");
 const makeReq = ({ params = {}, body = {} }) => ({ params, body });
 
 // TODO: write specs for correct settings
+const getHashedPassword = (pw) => bcrypt.hash(pw, bcrypt.genSaltSync(8));
 
 describeServiceMethod(
   "services/Authentication/login",
@@ -56,14 +57,11 @@ describeServiceMethod(
           body: { email: "email@email.com", password: "wrong_password" },
         }),
         queueResult: async () => {
-          const hashedPassword = await bcrypt.hash(
-            "password",
-            bcrypt.genSaltSync(8)
-          );
+          const password = await getHashedPassword("password");
 
-          User.$queueResult(
-            User.build({ email: "email@email.com", password: hashedPassword })
-          );
+          const user = User.build({ email: "email@email.com", password });
+
+          User.$queueResult(user);
         },
         expected: {
           error: true,
@@ -77,14 +75,11 @@ describeServiceMethod(
           body: { email: "email@email.com", password: "password" },
         }),
         queueResult: async () => {
-          const hashedPassword = await bcrypt.hash(
-            "password",
-            bcrypt.genSaltSync(8)
-          );
+          const password = await getHashedPassword("password");
 
-          User.$queueResult(
-            User.build({ email: "email@email.com", password: hashedPassword })
-          );
+          const user = User.build({ email: "email@email.com", password });
+
+          User.$queueResult(user);
         },
         expected: {
           result: {
@@ -106,14 +101,11 @@ describeServiceMethod(
           },
         }),
         queueResult: async () => {
-          const hashedPassword = await bcrypt.hash(
-            "password",
-            bcrypt.genSaltSync(8)
-          );
+          const password = await getHashedPassword("password");
 
-          User.$queueResult(
-            User.build({ email: "email@email.com", password: hashedPassword })
-          );
+          const user = User.build({ email: "email@email.com", password });
+
+          User.$queueResult(user);
           UserAppPassword.$queueResult(null);
         },
         expected: {
@@ -134,15 +126,12 @@ describeServiceMethod(
           },
         }),
         queueResult: async () => {
-          const hashedPassword = await bcrypt.hash(
-            "password",
-            bcrypt.genSaltSync(8)
-          );
+          const password = await getHashedPassword("password");
 
-          User.$queueResult(User.build({ email: "email@email.com" }));
-          UserAppPassword.$queueResult(
-            UserAppPassword.build({ password: hashedPassword })
-          );
+          const user = User.build({ email: "email@email.com", password });
+
+          User.$queueResult(user);
+          UserAppPassword.$queueResult(UserAppPassword.build({ password }));
         },
         expected: {
           result: {
