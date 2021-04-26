@@ -15,6 +15,9 @@ export = {
         onDelete: "CASCADE",
         allowNull: false,
       },
+      secretKey: {
+        type: Sequelize.STRING,
+      },
       name: {
         type: Sequelize.STRING,
         allowNull: false,

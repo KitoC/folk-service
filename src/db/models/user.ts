@@ -28,11 +28,11 @@ export type UserModelStatic = typeof Model &
     createStrategy?: () => void;
     serializeUser?: () => void;
     deserializeUser?: () => void;
-    getDecryptedAttributes: () => string[];
+    decryptedAttributes: any[];
   };
 
-export default (sequelize: SequelizeExtended) => {
-  const User = sequelize.defineExtended(
+export default (sequelize: SequelizeExtended, defineModel: any) => {
+  const User = defineModel(
     "User",
     {
       firstName: { type: DataTypes.STRING },

@@ -6,7 +6,7 @@ const createOne: RequestHandler = async (req, res, next) => {
 
   const payload = { ...req.body, organizationId };
 
-  res.locals.response = await AppService.get(payload);
+  res.locals.response = await AppService.createOne(payload);
 
   next();
 };

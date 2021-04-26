@@ -24,22 +24,14 @@ export * from "./UserAppSetting";
 export * from "./UserOrganizationPassword";
 export * from "./UserSignin";
 
-export interface ModelExtended extends ModelOptions {
-  getDecryptedAttributes: () => string[];
-}
 export interface ModelOptionsExtended extends ModelOptions {
   encryptedFields: string[];
 }
 
-export interface SequelizeExtended extends Sequelize {
-  defineExtended: (
-    modelName: string,
-    attributes: ModelAttributes,
-    options?: ModelOptionsExtended
-  ) => any;
-}
+export interface SequelizeExtended extends Sequelize {}
 
 export interface Db {
+  transaction: any;
   sequelize: SequelizeExtended;
   Sequelize: any;
   App: AppModelStatic;

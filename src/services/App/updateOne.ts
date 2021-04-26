@@ -1,10 +1,24 @@
 import { Container } from "../service.types";
 
 const makeUpdateOne = ({ db }: Container) => {
-  return (req: any) => {
+  return async (req: any, res: any) => {
     const { appId: id, organizationId } = req.params;
 
-    return db.App.update({ where: { id, organizationId } }, req.body);
+    const where = { id, organizationId };
+
+    let app;
+
+    await db.transaction(async (transaction: any) => {
+      await db.App.update(req.body, { where: { id, organizationId } });
+
+      app = await db.App.findOne({
+        where,
+        transaction,
+        attributes: db.App.decryptedAttributes,
+      });
+    });
+
+    return app;
   };
 };
 

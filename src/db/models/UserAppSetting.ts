@@ -22,8 +22,8 @@ export interface UserAppSettingInstance extends Model {
 export type UserAppSettingModelStatic = typeof Model &
   (new (values?: object, options?: BuildOptions) => UserAppSettingInstance);
 
-export default (sequelize: SequelizeExtended) => {
-  const UserAppSetting = sequelize.defineExtended("UserAppSetting", {
+export default (sequelize: SequelizeExtended, defineModel: any) => {
+  const UserAppSetting = defineModel("UserAppSetting", {
     appId: { type: DataTypes.STRING, allowNull: false },
     userId: { type: DataTypes.STRING, allowNull: false },
     settings: { type: DataTypes.JSON, allowNull: false },

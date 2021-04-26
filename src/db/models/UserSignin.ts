@@ -18,8 +18,8 @@ export interface UserSigninInstance extends Model {
 export type UserSigninModelStatic = typeof Model &
   (new (values?: object, options?: BuildOptions) => UserSigninInstance);
 
-export default (sequelize: SequelizeExtended) => {
-  const UserSignin = sequelize.defineExtended("UserSignin", {
+export default (sequelize: SequelizeExtended, defineModel: any) => {
+  const UserSignin = defineModel("UserSignin", {
     meta: { type: DataTypes.STRING, allowNull: false },
   }) as UserSigninModelStatic & {
     associate: (db: Db) => void;

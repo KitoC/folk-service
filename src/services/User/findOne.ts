@@ -4,10 +4,13 @@ import errors from "../../errors";
 const makeFindOne = (container: Container) => {
   const { db } = container;
 
-  return (options: any = {}) => {
-    const attributes = db.User.getDecryptedAttributes();
+  return async (options: any = {}) => {
+    const user = await db.User.findOne({
+      ...options,
+      attributes: db.App.decryptedAttributes,
+    });
 
-    return db.User.findOne({ attributes, ...options });
+    return user;
   };
 };
 

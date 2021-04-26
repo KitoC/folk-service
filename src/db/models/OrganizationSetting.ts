@@ -23,8 +23,8 @@ export type OrganizationSettingModelStatic = typeof Model &
     options?: BuildOptions
   ) => OrganizationSettingInstance);
 
-export default (sequelize: SequelizeExtended) => {
-  const OrganizationSetting = sequelize.defineExtended("OrganizationSetting", {
+export default (sequelize: SequelizeExtended, defineModel: any) => {
+  const OrganizationSetting = defineModel("OrganizationSetting", {
     organizationId: { type: DataTypes.UUID, allowNull: false },
     settings: { type: DataTypes.UUID, allowNull: false },
   }) as OrganizationSettingModelStatic & {

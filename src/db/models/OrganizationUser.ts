@@ -20,8 +20,8 @@ export interface OrganizationUserInstance extends Model {
 export type OrganizationUserModelStatic = typeof Model &
   (new (values?: object, options?: BuildOptions) => OrganizationUserInstance);
 
-export default (sequelize: SequelizeExtended) => {
-  const OrganizationUser = sequelize.defineExtended("OrganizationUser", {
+export default (sequelize: SequelizeExtended, defineModel: any) => {
+  const OrganizationUser = defineModel("OrganizationUser", {
     id: {
       type: DataTypes.UUID,
       allowNull: false,

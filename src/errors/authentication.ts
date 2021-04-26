@@ -10,6 +10,11 @@ interface AuthErrorTypes {
 }
 
 const authErrors = {
+  AUTH_NO_SECRET_KEY: {
+    message: "Secret key required.",
+    status: 401,
+    code: "AUTH_NO_SECRET_KEY",
+  },
   AUTH_NO_P_OR_U: {
     message: "No email or password provided.",
     status: 401,

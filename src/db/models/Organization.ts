@@ -19,8 +19,8 @@ export interface OrganizationInstance extends Model {
 export type OrganizationModelStatic = typeof Model &
   (new (values?: object, options?: BuildOptions) => OrganizationInstance);
 
-export default (sequelize: SequelizeExtended) => {
-  const Organization = sequelize.defineExtended("Organization", {
+export default (sequelize: SequelizeExtended, defineModel: any) => {
+  const Organization = defineModel("Organization", {
     name: { type: DataTypes.STRING, allowNull: false },
   }) as OrganizationModelStatic & {
     associate: (db: Db) => void;

@@ -22,8 +22,8 @@ export interface UserAppPasswordInstance extends Model {
 export type UserAppPasswordModelStatic = typeof Model &
   (new (values?: object, options?: BuildOptions) => UserAppPasswordInstance);
 
-export default (sequelize: SequelizeExtended) => {
-  const UserAppPassword = sequelize.defineExtended("UserAppPassword", {
+export default (sequelize: SequelizeExtended, defineModel: any) => {
+  const UserAppPassword = defineModel("UserAppPassword", {
     appId: { type: DataTypes.UUID, allowNull: false },
     userId: { type: DataTypes.UUID, allowNull: false },
     password: { type: DataTypes.STRING, allowNull: false },

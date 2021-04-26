@@ -25,15 +25,12 @@ export type UserOrganizationPasswordModelStatic = typeof Model &
     options?: BuildOptions
   ) => UserOrganizationPasswordInstance);
 
-export default (sequelize: SequelizeExtended) => {
-  const UserOrganizationPassword = sequelize.defineExtended(
-    "UserOrganizationPassword",
-    {
-      organizationId: { type: DataTypes.UUID, allowNull: false },
-      userId: { type: DataTypes.UUID, allowNull: false },
-      password: { type: DataTypes.STRING, allowNull: false },
-    }
-  ) as UserOrganizationPasswordModelStatic & {
+export default (sequelize: SequelizeExtended, defineModel: any) => {
+  const UserOrganizationPassword = defineModel("UserOrganizationPassword", {
+    organizationId: { type: DataTypes.UUID, allowNull: false },
+    userId: { type: DataTypes.UUID, allowNull: false },
+    password: { type: DataTypes.STRING, allowNull: false },
+  }) as UserOrganizationPasswordModelStatic & {
     associate: (db: Db) => void;
   };
 
