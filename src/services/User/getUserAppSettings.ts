@@ -7,16 +7,29 @@ const makeGetUserAppSettings = (container: Container) => {
   return async (req: any) => {
     const { appId } = req.params;
     const userId = currentUser.id;
+    const where = { appId, userId };
 
-    const appSettings = await db.UserAppSetting.findOne({
-      where: { appId, userId },
+    let appSettings;
+
+    await db.transaction(async (transaction: any) => {
+      const appPassword = await db.UserAppPassword.findOne({
+        where,
+        transaction,
+      });
+
+      if (!appPassword) {
+        throw errors.users.USER_APP_NO_ACCESS;
+      }
+
+      appSettings = await db.UserAppSetting.findOne({ where, transaction });
+
+      if (!appSettings) {
+        appSettings = await db.UserAppSetting.create(where, { transaction });
+      }
     });
 
-    if (!appSettings) {
-      throw errors.users.USER_APP_NO_ACCESS;
-    }
-
-    return appSettings;
+    /* @ts-ignore */
+    return appSettings.serialize();
   };
 };
 

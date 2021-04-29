@@ -17,19 +17,21 @@ export interface UserAppSettingInstance extends Model {
   appId: string;
   userId: string;
   settings: any;
+
+  serialize: () => UserAppSettingInstance;
 }
 
 export type UserAppSettingModelStatic = typeof Model &
-  (new (values?: object, options?: BuildOptions) => UserAppSettingInstance);
+  (new (values?: object, options?: BuildOptions) => UserAppSettingInstance) & {
+    associate: (db: Db) => void;
+  };
 
 export default (sequelize: SequelizeExtended, defineModel: any) => {
   const UserAppSetting = defineModel("UserAppSetting", {
     appId: { type: DataTypes.STRING, allowNull: false },
     userId: { type: DataTypes.STRING, allowNull: false },
-    settings: { type: DataTypes.JSON, allowNull: false },
-  }) as UserAppSettingModelStatic & {
-    associate: (db: Db) => void;
-  };
+    settings: { type: DataTypes.JSONB, allowNull: false, defaultValue: {} },
+  }) as UserAppSettingModelStatic;
 
   UserAppSetting.associate = function (models) {
     UserAppSetting.belongsTo(models.User, {
@@ -38,7 +40,16 @@ export default (sequelize: SequelizeExtended, defineModel: any) => {
       onDelete: "CASCADE",
       hooks: true,
     });
+
+    UserAppSetting.belongsTo(models.App, {
+      targetKey: "id",
+      foreignKey: { allowNull: false, name: "appId" },
+      onDelete: "CASCADE",
+      hooks: true,
+    });
   };
+
+  utils.models.addSettingsHooks(UserAppSetting);
 
   return UserAppSetting;
 };

@@ -7,6 +7,7 @@ export interface AppAttributes {
   organizationId?: string;
   name?: string;
   secretKey?: any;
+  settingsMap?: any;
 }
 
 export interface AppInstance extends Model {
@@ -17,6 +18,7 @@ export interface AppInstance extends Model {
   organizationId: string;
   name: string;
   secretKey: any;
+  settingsMap: any;
   dataValues: any;
 }
 
@@ -33,9 +35,24 @@ export default (sequelize: SequelizeExtended, defineModel: any) => {
       organizationId: { type: DataTypes.UUID, allowNull: false },
       name: { type: DataTypes.STRING, allowNull: false },
       secretKey: { type: DataTypes.STRING },
+      settingsMap: {
+        type: DataTypes.JSONB,
+        defaultValue: {},
+        allowNull: false,
+      },
     },
     { encryptedFields: ["secretKey"] }
   ) as AppModelStatic;
+
+  App.associate = function (models) {
+    const { UserAppSetting } = models;
+
+    App.hasMany(UserAppSetting, {
+      foreignKey: { allowNull: false, name: "appId" },
+      onDelete: "CASCADE",
+      hooks: true,
+    });
+  };
 
   return App;
 };

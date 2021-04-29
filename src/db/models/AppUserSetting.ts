@@ -26,7 +26,7 @@ export default (sequelize: SequelizeExtended, defineModel: any) => {
   const AppUserSetting = defineModel("AppUserSetting", {
     appId: { type: DataTypes.UUID, allowNull: false },
     userId: { type: DataTypes.UUID, allowNull: false },
-    settings: { type: DataTypes.UUID, allowNull: false },
+    settings: { type: DataTypes.JSONB, allowNull: false, defaultValue: {} },
   }) as AppUserSettingModelStatic & {
     associate: (db: Db) => void;
   };

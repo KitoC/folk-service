@@ -23,7 +23,7 @@ export type AppSettingModelStatic = typeof Model &
 export default (sequelize: SequelizeExtended, defineModel: any) => {
   const AppSetting = defineModel("AppSetting", {
     appId: { type: DataTypes.UUID, allowNull: false },
-    settings: { type: DataTypes.UUID, allowNull: false },
+    settings: { type: DataTypes.JSONB, allowNull: false },
   }) as AppSettingModelStatic & {
     associate: (db: Db) => void;
   };

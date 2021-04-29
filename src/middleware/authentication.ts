@@ -50,7 +50,6 @@ const jwtErrorSwitch = (message: string) => {
 
 const requireJwt: RequestHandler = (req, res, next) => {
   const { AuthenticationService } = res.locals.container.cradle;
-
   passport.authenticate(
     "jwt",
     { session: false },

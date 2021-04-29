@@ -9,7 +9,7 @@ export = {
         type: Sequelize.UUID,
       },
       meta: {
-        type: Sequelize.JSON,
+        type: Sequelize.JSONB,
       },
       createdAt: {
         allowNull: false,

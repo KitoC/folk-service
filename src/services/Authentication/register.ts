@@ -11,35 +11,37 @@ const makeRegister = (args: Container) => {
     const { appId } = req.params;
     const { password, email } = req.body;
 
-    const hashedPassword = await bcrypt.hash(password, bcrypt.genSaltSync(8));
+    let user;
 
-    let user = await UserService.findOne({ where: { email } });
+    await db.transaction(async (transaction: any) => {
+      const hashedPassword = await bcrypt.hash(password, bcrypt.genSaltSync(8));
+      const getUser = () =>
+        UserService.findOne({ where: { email }, transaction });
 
-    if (!user) {
-      const newUser = req.body;
+      user = await getUser();
 
-      if (!appId) {
-        newUser.password = hashedPassword;
+      if (!user) {
+        const newUser = req.body;
+
+        if (!appId) {
+          newUser.password = hashedPassword;
+        }
+
+        await db.User.create(newUser, { transaction });
+
+        user = await getUser();
       }
+      const ids = { appId, userId: user.id };
 
-      await db.User.create(newUser);
+      if (appId) {
+        await db.UserAppPassword.create(
+          { ...ids, password: hashedPassword },
+          { transaction }
+        );
 
-      user = await UserService.findOne({ where: { email } });
-    }
-
-    if (appId) {
-      await db.UserAppPassword.create({
-        appId,
-        userId: user.id,
-        password: hashedPassword,
-      });
-
-      await db.UserAppSetting.create({
-        appId,
-        userId: user.id,
-        settings: {},
-      });
-    }
+        await db.UserAppSetting.create(ids, { transaction });
+      }
+    });
 
     setCurrentUser(res, { user });
   };

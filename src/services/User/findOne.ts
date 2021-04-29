@@ -7,7 +7,7 @@ const makeFindOne = (container: Container) => {
   return async (options: any = {}) => {
     const user = await db.User.findOne({
       ...options,
-      attributes: db.App.decryptedAttributes,
+      attributes: db.User.decryptedAttributes,
     });
 
     return user;

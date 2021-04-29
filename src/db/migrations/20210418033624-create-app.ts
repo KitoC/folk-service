@@ -22,6 +22,11 @@ export = {
         type: Sequelize.STRING,
         allowNull: false,
       },
+      settingsMap: {
+        type: Sequelize.JSONB,
+        defaultValue: {},
+        allowNull: false,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

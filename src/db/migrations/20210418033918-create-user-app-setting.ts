@@ -23,7 +23,7 @@ export = {
         allowNull: false,
       },
       settings: {
-        type: Sequelize.JSON,
+        type: Sequelize.JSONB,
         defaultValue: {},
         allowNull: false,
       },

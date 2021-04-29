@@ -1,4 +1,6 @@
 import addUUID from "./addUUID";
+import get from "lodash/get";
+import isObject from "lodash/isObject";
 
 const define = (sequelize: any) => (
   modelName: string,
@@ -38,6 +40,9 @@ const define = (sequelize: any) => (
 
     const PG_ENCRYPT_FN = "PGP_SYM_ENCRYPT";
     const PG_ENCRYPT_T = "AES_KEY";
+
+    const handleValue = (value: any) =>
+      isObject(value) ? `${JSON.stringify(value)}` : value;
 
     const encryptField = (value: any) => fn(PG_ENCRYPT_FN, value, PG_ENCRYPT_T);
 

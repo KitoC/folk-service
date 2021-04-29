@@ -6,6 +6,10 @@ const checkSecretKey: RequestHandler = async (req, res, next) => {
 
   const app = await AppService.getOne(req);
 
+  if (!app) {
+    throw errors.apps.APP_NO_EXIST;
+  }
+
   if (app.secretKey && app.secretKey !== req.headers.secretkey) {
     throw errors.authentication.AUTH_NO_SECRET_KEY;
   }

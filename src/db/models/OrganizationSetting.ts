@@ -26,7 +26,7 @@ export type OrganizationSettingModelStatic = typeof Model &
 export default (sequelize: SequelizeExtended, defineModel: any) => {
   const OrganizationSetting = defineModel("OrganizationSetting", {
     organizationId: { type: DataTypes.UUID, allowNull: false },
-    settings: { type: DataTypes.UUID, allowNull: false },
+    settings: { type: DataTypes.JSONB, allowNull: false, defaultValue: {} },
   }) as OrganizationSettingModelStatic & {
     associate: (db: Db) => void;
   };
