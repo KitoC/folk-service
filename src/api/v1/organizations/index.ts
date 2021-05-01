@@ -5,7 +5,14 @@ import apps from "./apps";
 
 const router = Router({ mergeParams: true });
 
-router.use("/:organizationId/apps", apps);
+router.use(
+  "/:organizationId/apps",
+  utils.middleware.tryCatchAll(
+    middleware.authentication.requireJwt,
+    middleware.organizations.isOrganizationUser
+  ),
+  apps
+);
 
 router.post(
   "/",

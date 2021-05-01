@@ -7,7 +7,6 @@ const router = Router({ mergeParams: true });
 router.get(
   "/:appId",
   utils.middleware.tryCatchAll(
-    middleware.authentication.requireJwt,
     middleware.organizations.apps.getOne,
     middleware.shared.sendResponse
   )
@@ -16,7 +15,6 @@ router.get(
 router.get(
   "/",
   utils.middleware.tryCatchAll(
-    middleware.authentication.requireJwt,
     middleware.organizations.apps.getAll,
     middleware.shared.sendResponse
   )
@@ -25,7 +23,6 @@ router.get(
 router.post(
   "/",
   utils.middleware.tryCatchAll(
-    middleware.authentication.requireJwt,
     middleware.organizations.apps.createOne,
     middleware.shared.sendResponse
   )
@@ -34,7 +31,6 @@ router.post(
 router.patch(
   "/:appId",
   utils.middleware.tryCatchAll(
-    middleware.authentication.requireJwt,
     middleware.organizations.apps.updateOne,
     middleware.shared.sendResponse
   )
