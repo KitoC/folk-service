@@ -5,17 +5,20 @@ import { LoaderArgs } from "../@types/loader.types";
 export default ({ app, registerModules = () => {} }: LoaderArgs) => {
   const container = awilix.createContainer();
 
-  container.loadModules(
-    ["src/services/**/index.js", "src/services/**/index.ts"],
-    {
-      formatName: (ignore: string, { path }: any) => {
-        const [fileName, serviceName] = path.split("/").reverse();
+  let modules = ["src/services/**/index.ts"];
 
-        return `${serviceName}Service`;
-      },
-      resolverOptions: { register: awilix.asFunction },
-    }
-  );
+  if (process.env.NODE_ENV === "production") {
+    modules = ["dist/src/services/**/index.js"];
+  }
+
+  container.loadModules(modules, {
+    formatName: (ignore: string, { path }: any) => {
+      const [fileName, serviceName] = path.split("/").reverse();
+
+      return `${serviceName}Service`;
+    },
+    resolverOptions: { register: awilix.asFunction },
+  });
 
   container.register({
     currentUser: awilix.asValue(null),

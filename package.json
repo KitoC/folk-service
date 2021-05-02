@@ -5,9 +5,10 @@
   "main": "src/server",
   "scripts": {
     "test": "NODE_ENV=test jest --coverage",
-    "start": "ts-node-dev src/server",
+    "start:dev": "ts-node-dev src/server",
+    "start": "NODE_ENV=production node dist/src/server",
     "sql": "yarn sequelize",
-    "build": "rm -rf dist && yarn tsc",
+    "build": "rm -rf dist && yarn tsc -p .",
     "db:migrate": "yarn build && yarn sql db:migrate",
     "db:reset": "yarn sql db:drop && yarn sql db:create && yarn build && yarn sql db:migrate"
   },
