@@ -10,7 +10,7 @@
     "sql": "yarn sequelize",
     "build": "rm -rf dist && yarn tsc",
     "db:migrate": "yarn build && yarn sql db:migrate",
-    "heroku-prebuild": "NODE_ENV=development yarn install",
+    "postinstall": "NODE_ENV=development yarn install",
     "heroku-postbuild": "yarn db:migrate",
     "db:reset": "yarn sql db:drop && yarn sql db:create && yarn build && yarn sql db:migrate"
   },

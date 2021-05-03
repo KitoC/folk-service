@@ -3,7 +3,7 @@ require("dotenv").config();
 const shared = {
   dialect: "postgres",
   dialectOptions: {
-    ssl: { rejectUnauthorized: false },
+    ssl: true,
   },
 };
 
