@@ -2,6 +2,9 @@ require("dotenv").config();
 
 const shared = {
   dialect: "postgres",
+  dialectOptions: {
+    ssl: true,
+  },
 };
 
 export = {
@@ -11,5 +14,8 @@ export = {
     logging: true,
   },
   test: { ...shared, use_env_variable: "DATABASE_URL_TEST", logging: false },
-  production: { ...shared, use_env_variable: "DATABASE_URL" },
+  production: {
+    ...shared,
+    use_env_variable: "DATABASE_URL",
+  },
 };
