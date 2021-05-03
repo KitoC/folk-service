@@ -56,7 +56,11 @@ export default ({ app, config }: LoaderArgs) => {
   const sequelize =
     env === "test"
       ? new SequelizeMock(process.env[_config.use_env_variable], _config)
-      : new Sequelize(process.env[_config.use_env_variable], _config);
+      : new Sequelize(
+          process.env[_config.use_env_variable] +
+            "&ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory",
+          _config
+        );
 
   let modelDir: string = "";
 
