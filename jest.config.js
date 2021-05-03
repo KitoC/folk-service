@@ -3,5 +3,5 @@ module.exports = {
   testEnvironment: "node",
   collectCoverage: true,
   collectCoverageFrom: ["src/**/*.{js,jsx,ts}"],
-  testPathIgnorePatterns: ["<rootDir>/src/db/migrations"],
+  testPathIgnorePatterns: ["src/db/migrations"],
 };
