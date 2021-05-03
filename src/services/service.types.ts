@@ -1,6 +1,4 @@
-import { Db } from "../db/models/types";
-// import { UserInstance } from "../db/models/types";
-import { AppInstance } from "../db/models/App";
+import { Db, UserInstance } from "../db/models/types";
 
 export interface UserService {
   findOne: (where: any) => any;
@@ -10,6 +8,6 @@ export interface UserService {
 export interface Container {
   db: Db;
   UserService: UserService;
-  currentUser: any;
+  currentUser: UserInstance;
   userSettings: any;
 }
