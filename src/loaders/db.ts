@@ -24,7 +24,6 @@ const sqlLogger = function (text: string) {
   const secs = dateObj.getSeconds();
 
   const date = `${year}-${month}-${day} ${hours}:${mins}:${secs} sql query:`;
-  console.log(`\n${date}\n ${sqlColors(text)}`);
 };
 
 export default ({ app, config }: LoaderArgs) => {
@@ -34,13 +33,18 @@ export default ({ app, config }: LoaderArgs) => {
 
   const getModelByKey: GetModelByKeyFunction = (key) => get(db, key, {});
   const addModelToDb: AddModelToDbFunction = async (file) => {
-    const model = require(path.join(modelDir, file)).default(
-      sequelize,
-      utils.models.define(sequelize)
-    );
-    const key = startCase(model.name).replace(/ /g, "");
+    try {
+      const model = require(path.join(modelDir, file)).default(
+        sequelize,
+        utils.models.define(sequelize)
+      );
 
-    db = { ...db, [key]: model };
+      const key = startCase(model.name).replace(/ /g, "");
+
+      db = { ...db, [key]: model };
+    } catch (error) {
+      console.log("LOADING MODEL ERROR -->", error);
+    }
   };
 
   const _config = get(config, `db.${env}`, {});
@@ -77,6 +81,19 @@ export default ({ app, config }: LoaderArgs) => {
 
   db.transaction = async (callback: (t: any) => void) => {
     let transaction;
+
+    if (env === "test") {
+      // NOTE: Required for testing
+      // @ts-ignore
+      db.sequelize.transaction = () =>
+        // @ts-ignore
+        Promise.resolve({
+          // @ts-ignore
+          commit: () => Promise.resolve({}),
+          // @ts-ignore
+          rollback: () => Promise.resolve({}),
+        });
+    }
 
     try {
       transaction = await db.sequelize.transaction();

@@ -11,8 +11,4 @@ env:
     - DATABASE_URL_TEST=postgres://travis@localhost:5433/user-service_test
 
 script:
-  # - "npm run lint"
-
-  - "yarn"
-  - "yarn db:migrate"
-  - "yarn test"
+  - "NODE_ENV=test yarn test"

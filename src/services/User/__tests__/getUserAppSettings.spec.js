@@ -26,7 +26,7 @@ describe("services/User/getUserAppSettings", () => {
       });
       const result = await getUserAppSettings(req);
 
-      expect(result.dataValues).toEqual(expected.dataValues);
+      expect(result).toEqual(expected.dataValues);
     });
   });
 

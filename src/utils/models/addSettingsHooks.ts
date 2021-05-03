@@ -2,6 +2,8 @@ import sequelize from "sequelize";
 import crypto from "../crypto";
 
 const addSettingsHooks = (Model: any) => {
+  const env = process.env.NODE_ENV;
+
   const handleSettings = async (record: any) => {
     const { settingsMap } = await record.getApp();
 
@@ -28,10 +30,17 @@ const addSettingsHooks = (Model: any) => {
   Model.beforeUpdate(handleSettings);
   Model.beforeBulkUpdate(handleSettings);
 
-  Model.prototype.serialize = function () {
+  if (env === "test") {
+    Model.Instance.prototype.serialize = serialize;
+  } else {
+    Model.prototype.serialize = serialize;
+  }
+
+  function serialize() {
     /* @ts-ignore */
     const dataValues = this.dataValues;
-    const settings = dataValues.settings;
+
+    const settings = dataValues.settings || {};
 
     Object.entries(settings).forEach(([key, value]) => {
       /* @ts-ignore */
@@ -43,7 +52,7 @@ const addSettingsHooks = (Model: any) => {
     dataValues.settings = settings;
 
     return dataValues;
-  };
+  }
 };
 
 export default addSettingsHooks;

@@ -12,7 +12,7 @@ const userAppSetting1 = db.UserAppSetting.build({
 });
 
 db.UserAppSetting.$queueResult(userAppSetting1);
-// db.UserAppSetting.$queueResult(userAppSetting1);
+db.UserAppSetting.$queueResult(userAppSetting1);
 
 describe("services/User/updateUserAppSettings", () => {
   describe("when currentUser has access to app", () => {
@@ -33,7 +33,7 @@ describe("services/User/updateUserAppSettings", () => {
 
       const result = await updateUserAppSettings(req);
 
-      expect(result.dataValues.settings).toEqual(expected.settings);
+      expect(result.settings).toEqual(expected.settings);
     });
   });
 
