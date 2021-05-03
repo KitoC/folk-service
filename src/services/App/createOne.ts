@@ -1,5 +1,5 @@
 import { Container } from "../service.types";
-import { AppAttributes } from "../../db/models/db.types";
+import { AppAttributes } from "../../db/models/types";
 import sequelize, { Sequelize } from "sequelize";
 
 const makeGetOne = ({ db }: Container) => {

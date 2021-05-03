@@ -1,5 +1,5 @@
-import { Db } from "../db/models/db.types";
-// import { UserInstance } from "../db/models/User";
+import { Db } from "../db/models/types";
+// import { UserInstance } from "../db/models/types";
 import { AppInstance } from "../db/models/App";
 
 export interface UserService {

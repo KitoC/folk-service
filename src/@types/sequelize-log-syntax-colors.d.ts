@@ -1,1 +1,1 @@
-declare module "passport-local-sequelize";
+declare module "sequelize-log-syntax-colors";

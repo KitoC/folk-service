@@ -1,29 +1,12 @@
 import { DataTypes, BuildOptions, Model } from "sequelize";
-import { Db, SequelizeExtended } from "./db.types";
 import passportLocalSequelize from "passport-local-sequelize";
 import utils from "../../utils";
 
-export interface UserOrganizationPasswordAttributes {
-  organizationId?: string;
-  userId?: string;
-  password?: string;
-}
-
-export interface UserOrganizationPasswordInstance extends Model {
-  id: string;
-  createdAt: Date;
-  updatedAt: Date;
-
-  organizationId: string;
-  userId: string;
-  password: string;
-}
-
-export type UserOrganizationPasswordModelStatic = typeof Model &
-  (new (
-    values?: object,
-    options?: BuildOptions
-  ) => UserOrganizationPasswordInstance);
+import {
+  Db,
+  SequelizeExtended,
+  UserOrganizationPasswordModelStatic,
+} from "./types";
 
 export default (sequelize: SequelizeExtended, defineModel: any) => {
   const UserOrganizationPassword = defineModel("UserOrganizationPassword", {
@@ -31,7 +14,7 @@ export default (sequelize: SequelizeExtended, defineModel: any) => {
     userId: { type: DataTypes.UUID, allowNull: false },
     password: { type: DataTypes.STRING, allowNull: false },
   }) as UserOrganizationPasswordModelStatic & {
-    associate: (db: Db) => void;
+    associate: (db: any) => void;
   };
 
   // UserOrganizationPassword.associate = function (models) {

@@ -1,7 +1,7 @@
 import { Container } from "../service.types";
 import errors from "../../errors";
 
-import { OrganizationAttributes } from "../../db/models/db.types";
+import { OrganizationAttributes } from "../../db/models/types";
 
 const makeFindOne = (container: Container) => {
   const { db, currentUser } = container;

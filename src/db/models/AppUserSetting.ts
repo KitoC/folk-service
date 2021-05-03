@@ -1,26 +1,8 @@
 import { DataTypes, BuildOptions, Model } from "sequelize";
-import { Db, SequelizeExtended } from "./db.types";
 import passportLocalSequelize from "passport-local-sequelize";
 import utils from "../../utils";
 
-export interface AppUserSettingAttributes {
-  appId?: string;
-  userId?: string;
-  settings?: string;
-}
-
-export interface AppUserSettingInstance extends Model {
-  id: string;
-  createdAt: Date;
-  updatedAt: Date;
-
-  appId: string;
-  userId: string;
-  settings: any;
-}
-
-export type AppUserSettingModelStatic = typeof Model &
-  (new (values?: object, options?: BuildOptions) => AppUserSettingInstance);
+import { Db, SequelizeExtended, AppUserSettingModelStatic } from "./types";
 
 export default (sequelize: SequelizeExtended, defineModel: any) => {
   const AppUserSetting = defineModel("AppUserSetting", {
@@ -28,7 +10,7 @@ export default (sequelize: SequelizeExtended, defineModel: any) => {
     userId: { type: DataTypes.UUID, allowNull: false },
     settings: { type: DataTypes.JSONB, allowNull: false, defaultValue: {} },
   }) as AppUserSettingModelStatic & {
-    associate: (db: Db) => void;
+    associate: (db: any) => void;
   };
 
   // AppUserSetting.associate = function (models) {

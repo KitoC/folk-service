@@ -71,7 +71,7 @@ export default ({ app, config }: LoaderArgs) => {
   }
 
   fs.readdirSync(modelDir)
-    .filter((file) => !["db.types.ts", "db.types.js"].includes(file))
+    .filter((file) => !["types"].includes(file))
     .forEach(addModelToDb);
 
   Object.keys(db).forEach((modelName) => {

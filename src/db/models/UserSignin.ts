@@ -1,28 +1,14 @@
 import { DataTypes, BuildOptions, Model } from "sequelize";
-import { Db, SequelizeExtended } from "./db.types";
 import passportLocalSequelize from "passport-local-sequelize";
 import utils from "../../utils";
 
-export interface UserSigninAttributes {
-  meta?: string;
-}
-
-export interface UserSigninInstance extends Model {
-  id: string;
-  createdAt: Date;
-  updatedAt: Date;
-
-  meta: string;
-}
-
-export type UserSigninModelStatic = typeof Model &
-  (new (values?: object, options?: BuildOptions) => UserSigninInstance);
+import { Db, SequelizeExtended, UserSigninModelStatic } from "./types";
 
 export default (sequelize: SequelizeExtended, defineModel: any) => {
   const UserSignin = defineModel("UserSignin", {
     meta: { type: DataTypes.STRING, allowNull: false },
   }) as UserSigninModelStatic & {
-    associate: (db: Db) => void;
+    associate: (db: any) => void;
   };
 
   // UserSignin.associate = function (models) {

@@ -1,26 +1,8 @@
 import { DataTypes, BuildOptions, Model } from "sequelize";
-import { Db, SequelizeExtended } from "./db.types";
 import passportLocalSequelize from "passport-local-sequelize";
 import utils from "../../utils";
 
-export interface UserAppPasswordAttributes {
-  appId: string;
-  userId: string;
-  password: string;
-}
-
-export interface UserAppPasswordInstance extends Model {
-  id: string;
-  createdAt: Date;
-  updatedAt: Date;
-
-  appId: string;
-  userId: string;
-  password: string;
-}
-
-export type UserAppPasswordModelStatic = typeof Model &
-  (new (values?: object, options?: BuildOptions) => UserAppPasswordInstance);
+import { Db, SequelizeExtended, UserAppPasswordModelStatic } from "./types";
 
 export default (sequelize: SequelizeExtended, defineModel: any) => {
   const UserAppPassword = defineModel("UserAppPassword", {
@@ -28,10 +10,10 @@ export default (sequelize: SequelizeExtended, defineModel: any) => {
     userId: { type: DataTypes.UUID, allowNull: false },
     password: { type: DataTypes.STRING, allowNull: false },
   }) as UserAppPasswordModelStatic & {
-    associate: (db: Db) => void;
+    associate: (db: any) => void;
   };
 
-  UserAppPassword.associate = function (models) {
+  UserAppPassword.associate = function (models: Db) {
     const { User } = models;
 
     UserAppPassword.belongsTo(User, {

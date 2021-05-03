@@ -1,24 +1,8 @@
 import { DataTypes, BuildOptions, Model } from "sequelize";
-import { Db, SequelizeExtended } from "./db.types";
 import passportLocalSequelize from "passport-local-sequelize";
 import utils from "../../utils";
 
-export interface OrganizationUserAttributes {
-  organizationId?: string;
-  userId?: string;
-}
-
-export interface OrganizationUserInstance extends Model {
-  id: string;
-  createdAt: Date;
-  updatedAt: Date;
-
-  organizationId: string;
-  userId: string;
-}
-
-export type OrganizationUserModelStatic = typeof Model &
-  (new (values?: object, options?: BuildOptions) => OrganizationUserInstance);
+import { Db, SequelizeExtended, OrganizationUserModelStatic } from "./types";
 
 export default (sequelize: SequelizeExtended, defineModel: any) => {
   const OrganizationUser = defineModel("OrganizationUser", {
@@ -38,10 +22,10 @@ export default (sequelize: SequelizeExtended, defineModel: any) => {
       references: { model: "User", key: "id" },
     },
   }) as OrganizationUserModelStatic & {
-    associate: (db: Db) => void;
+    associate: (db: any) => void;
   };
 
-  OrganizationUser.associate = function (models) {};
+  OrganizationUser.associate = function (models: Db) {};
 
   return OrganizationUser;
 };

@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 import passport from "passport";
 import errors from "../errors";
 import { RequestHandler } from "express";
-import { UserInstance } from "../db/models/user";
+import { UserInstance } from "../db/models/types";
 import utils from "../utils";
 import * as awilix from "awilix";
 

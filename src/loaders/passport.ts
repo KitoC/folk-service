@@ -4,7 +4,7 @@ import passport from "passport";
 // import LocalStrategy from "passport-local";
 import passportJWT from "passport-jwt";
 import { LoaderArgs } from "../@types/loader.types";
-import { UserInstance } from "../db/models/user";
+import { UserInstance } from "../db/models/types";
 import errors from "../errors";
 import utils from "../utils";
 

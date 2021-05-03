@@ -1,35 +1,8 @@
 import { DataTypes, BuildOptions, Model } from "sequelize";
-import { Db, SequelizeExtended, UserAppPasswordInstance } from "./db.types";
 import passportLocalSequelize from "passport-local-sequelize";
 import utils from "../../utils";
 
-export interface UserAttributes {
-  firstName?: string;
-  lastName?: string;
-  email: string;
-  password: string;
-}
-
-export interface UserInstance extends Model {
-  id: string;
-  createdAt: Date;
-  updatedAt: Date;
-
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-  UserAppPasswords: UserAppPasswordInstance[];
-}
-
-export type UserModelStatic = typeof Model &
-  (new (values?: object, options?: BuildOptions) => UserInstance) & {
-    associate: (db: Db) => void;
-    createStrategy?: () => void;
-    serializeUser?: () => void;
-    deserializeUser?: () => void;
-    decryptedAttributes: any[];
-  };
+import { Db, SequelizeExtended, UserModelStatic } from "./types";
 
 export default (sequelize: SequelizeExtended, defineModel: any) => {
   const User = defineModel(
@@ -43,7 +16,7 @@ export default (sequelize: SequelizeExtended, defineModel: any) => {
     { encryptedFields: ["firstName", "lastName"] }
   ) as UserModelStatic;
 
-  User.associate = function (models) {
+  User.associate = function (models: Db) {
     const {
       Organization,
       OrganizationUser,

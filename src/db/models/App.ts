@@ -1,32 +1,7 @@
 import { fn, DataTypes, BuildOptions, Model } from "sequelize";
-
-import { Db, SequelizeExtended } from "./db.types";
 import utils from "../../utils";
 
-export interface AppAttributes {
-  organizationId?: string;
-  name?: string;
-  secretKey?: any;
-  settingsMap?: any;
-}
-
-export interface AppInstance extends Model {
-  id: string;
-  createdAt: Date;
-  updatedAt: Date;
-
-  organizationId: string;
-  name: string;
-  secretKey: any;
-  settingsMap: any;
-  dataValues: any;
-}
-
-export type AppModelStatic = typeof Model &
-  (new (values?: object, options?: BuildOptions) => AppInstance) & {
-    associate: (db: Db) => void;
-    decryptedAttributes: any[];
-  };
+import { Db, SequelizeExtended, AppModelStatic } from "./types";
 
 export default (sequelize: SequelizeExtended, defineModel: any) => {
   const App = defineModel(
@@ -44,7 +19,7 @@ export default (sequelize: SequelizeExtended, defineModel: any) => {
     { encryptedFields: ["secretKey"] }
   ) as AppModelStatic;
 
-  App.associate = function (models) {
+  App.associate = function (models: Db) {
     const { UserAppSetting } = models;
 
     App.hasMany(UserAppSetting, {
