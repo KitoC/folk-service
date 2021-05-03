@@ -8,7 +8,7 @@
     "start:dev": "ts-node-dev src/server",
     "start": "NODE_ENV=production node dist/src/server",
     "sql": "yarn sequelize",
-    "build": "rm -rf dist && yarn tsc -p .",
+    "build": "rm -rf dist && yarn tsc",
     "db:migrate": "yarn build && yarn sql db:migrate",
     "db:reset": "yarn sql db:drop && yarn sql db:create && yarn build && yarn sql db:migrate"
   },
