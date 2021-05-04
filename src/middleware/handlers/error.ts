@@ -15,9 +15,9 @@ const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
   console.log(err);
   console.log("\n___ERROR CAUGHT___\n");
 
-  const { message, code, status } = err;
+  const { message, code, status, meta } = err;
 
-  res.json({ errors: { message, code, status } });
+  res.json({ errors: { message, code, status, meta } });
 };
 
 export default errorHandler;

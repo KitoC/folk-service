@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import errors from "../../errors";
+import utils from "../../utils";
 
 const registration = async (
   req: Request,
@@ -12,6 +13,13 @@ const registration = async (
   if (!email || !password) {
     throw errors.authentication.AUTH_NO_P_OR_U;
   }
+
+  utils.middleware.validatePassword(password, {
+    atLeastOneUppercaseLetter: true,
+    atLeastOneLowercaseLetter: true,
+    atLeastOneNumber: true,
+    atLeastOneSpecialCharacter: true,
+  });
 
   const { UserService, db } = res.locals.container.cradle;
 
